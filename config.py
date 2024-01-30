@@ -6,10 +6,6 @@ Created on Jan 30 2024
 
 """
 import os
-import datetime
-import numpy as np
-import pandas as pd
-
 
 ###############
 #Company Configs
@@ -22,8 +18,10 @@ company_ID = 2
 #输出路径##
 ##########
 path = "D:\合作店铺"
-output_path = os.path.join(path,company_name)
 
+output_path = os.path.join(path,company_name)
+if not os.path.exists(output_path):
+    os.makedirs(output_path)
 #################
 #报告所需其他参数：
 #################
