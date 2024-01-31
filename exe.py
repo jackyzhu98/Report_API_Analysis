@@ -22,9 +22,10 @@ if __name__ == '__main__':
         os.makedirs(basic_path)
 
     os.chdir(basic_path)
-    print("Querying Basic Data")
+    print("Querying Basic Data...")
     basic_data_query(connection,raw_query_list)
-    print("Completed")
+    print("Query Completed")
+
     ## Data Read
     
     order_data = pd.read_csv('seller_order.csv')
@@ -37,11 +38,22 @@ if __name__ == '__main__':
     if not os.path.exists(agg_path):
         os.makedirs(agg_path)
     os.chdir(os.path.join(output_path,'Agg Data'))
-    print("CP_0")
+    print("开始店铺销售量分析...")
     seller_order(order_data,currency_data)
-    print("CP_1")
+    print("店铺销售量分析结束...")
+
+    print("开始店铺回款分析...")
     seller_finance(finance_data,currency_data)
-    print("CP_2")
+    print("店铺回款分析结束...")
+
+    print("开始扣款分析...")
     fee_analysis(order_product,inventory,currency_data)
-    print("CP_3")
+    print("扣款分析结束...")
+
+    print("开始退款分析...")
     refund_analysis(refund_data,order_data,inventory,currency_data)
+    print("退款分析结束...")
+
+    print("开始产品销售量分析...")
+    product_sales(order_product,order_data,inventory,currency_data)
+    print("产品销售量分析结束...")

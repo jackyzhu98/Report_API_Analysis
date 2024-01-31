@@ -8,34 +8,29 @@ Created on Jan 30 2024
 import os
 
 ###############
-#Company Configs
+#需修改Configs
 ###############
-company_name = "QiuDe"
+path = "D:\合作店铺"
+company_name = "WoHongXiang"
 # 1 - 松华 2 - 球德 3 - 沃鸿翔
-company_ID = 2
+company_ID = 3
 
+db_user= 'jacky'
+password= 'jacky_1017'
 ##########
 #输出路径##
 ##########
-path = "D:\合作店铺"
 
 output_path = os.path.join(path,company_name)
+
 if not os.path.exists(output_path):
     os.makedirs(output_path)
-#################
-#报告所需其他参数：
-#################
-
-report_year = 2023 # 年份
 
 ###########
 #数据库参数#
 ###########
 ## Connection
-
 db_host = '192.168.2.108'
-db_user= 'jacky'
-password= 'jacky_1017'
 
 
 ## Database

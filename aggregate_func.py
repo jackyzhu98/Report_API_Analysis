@@ -15,6 +15,18 @@ def seller_finance(finance_data,cur_data):
     finance_data['amount_usd'] = finance_data['amount']/finance_data['rate']
     finance_data = finance_data.groupby(['seller_id','year','month'])[['amount_usd']].sum().reset_index()
     finance_data.to_csv('店铺回款.csv')
+
+## 产品销售量数据
+def product_sales(order_product,order_data,inventory,cur_data):
+    product_sales = order_data.merge(order_product[['seller_id','amazon_order_id','seller_sku','year','month','day']], how = 'left',on =['seller_id','amazon_order_id','year','month','day'])
+    product_sales = product_sales.merge(cur_data,how = 'left',on = ['currency_code','year','month','day'])
+    product_sales = product_sales.merge(inventory,how = 'left', on = ['seller_id','seller_sku'])
+    product_sales['asin'] = product_sales['asin'].fillna('Missing')
+    product_sales['amount_usd'] = product_sales['amount']/product_sales['rate']
+    product_sales = product_sales.groupby(['seller_id','marketplace','asin','seller_sku','year','month'])[['amount_usd','quantity_shipped']].sum().reset_index()
+    product_sales.to_csv('产品销量.csv')
+
+
 ## 扣款数据
 def fee_analysis(order_product,inventory,cur_data):
     order_product = order_product.merge(inventory,how = 'left', on = ['seller_id','seller_sku'])
