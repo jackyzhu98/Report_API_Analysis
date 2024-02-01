@@ -2,9 +2,11 @@ from config import *
 import pandas as pd
 
 ### Seller 筛选条件
-seller_filter = f""" _seller_id collate utf8mb4_unicode_520_ci in 
-                (SELECT seller_code FROM zonglink_amazon_v9.vw_company_email_seller
-                where company_id = {company_ID})"""
+seller_filter = f""" _seller_id in ('A2UVSPW9T36W11',
+'A3A2SKWMOC62VF',
+'A2ST06RBRNM2YB',
+'AYBG8KY93WXSD',
+'A4UEEFW5C73SF'))"""
 
 order_filter = f""" amount <> '' and order_status = 'Shipped' """ #数额大于0且成功送达
 finance_filter = f"""fund_transfer_status = 'Succeeded'""" #成功收到回款
