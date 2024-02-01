@@ -6,15 +6,19 @@ import os
 def seller_order(order_data,cur_data):
     order_data = order_data.merge(cur_data,how = 'left',on = ['currency_code','year','month','day'])
     order_data['amount_usd'] = order_data['amount']/order_data['rate']
-    order_data = order_data.groupby(['seller_id','marketplace','year','month'])[['amount_usd','quantity_shipped']].sum().reset_index()
-    order_data.to_csv('店铺销量.csv')
+    monthly_order_data = order_data.groupby(['seller_id','marketplace','year','month'])[['amount_usd','quantity_shipped']].sum().reset_index()
+    daily_order_data = order_data.groupby(['seller_id','marketplace','year','month','day'])[['amount_usd','quantity_shipped']].sum().reset_index()
+    monthly_order_data.to_csv('店铺销量.csv')
+    daily_order_data.to_csv('每日店铺销量.csv')
 
 ## 店铺回款数据
 def seller_finance(finance_data,cur_data):
     finance_data = finance_data.merge(cur_data,how = 'left',on = ['currency_code','year','month','day'])
     finance_data['amount_usd'] = finance_data['amount']/finance_data['rate']
-    finance_data = finance_data.groupby(['seller_id','year','month'])[['amount_usd']].sum().reset_index()
-    finance_data.to_csv('店铺回款.csv')
+    monthly_finance_data = finance_data.groupby(['seller_id','year','month'])[['amount_usd']].sum().reset_index()
+    daily_finance_data = finance_data.groupby(['seller_id','year','month','day'])[['amount_usd']].sum().reset_index()
+    monthly_finance_data.to_csv('店铺回款.csv')
+    daily_finance_data.to_csv('每日店铺回款.csv')
 
 ## 产品销售量数据
 def product_sales(order_product,order_data,inventory,cur_data):

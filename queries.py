@@ -6,7 +6,7 @@ seller_filter = f""" _seller_id in ('A2UVSPW9T36W11',
 'A3A2SKWMOC62VF',
 'A2ST06RBRNM2YB',
 'AYBG8KY93WXSD',
-'A4UEEFW5C73SF'))"""
+'A4UEEFW5C73SF')"""
 
 order_filter = f""" amount <> '' and order_status = 'Shipped' """ #数额大于0且成功送达
 finance_filter = f"""fund_transfer_status = 'Succeeded'""" #成功收到回款
@@ -120,6 +120,9 @@ def basic_data_query(connection,raw_query_list):
     for i in raw_query_list:
         qur =  raw_query_dict[i]
         col =  raw_col_dict[i]
-        df = query_func(connection = connection, query= qur, col_name= col)
-        df.to_csv(i+'.csv')
+        try:
+            df = query_func(connection = connection, query= qur, col_name= col)
+            df.to_csv(i+'.csv')
+        except:
+            print("Query Failed: " + i)
 
