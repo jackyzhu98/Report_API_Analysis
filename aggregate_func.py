@@ -15,8 +15,8 @@ def seller_order(order_data,cur_data):
 def seller_finance(finance_data,cur_data):
     finance_data = finance_data.merge(cur_data,how = 'left',on = ['currency_code','year','month','day'])
     finance_data['amount_usd'] = finance_data['amount']/finance_data['rate']
-    monthly_finance_data = finance_data.groupby(['seller_id','year','month'])[['amount_usd']].sum().reset_index()
-    daily_finance_data = finance_data.groupby(['seller_id','year','month','day'])[['amount_usd']].sum().reset_index()
+    monthly_finance_data = finance_data.groupby(['seller_id','year','month','currency_code'])[['amount_usd']].sum().reset_index()
+    daily_finance_data = finance_data.groupby(['seller_id','year','month','day','currency_code'])[['amount_usd']].sum().reset_index()
     monthly_finance_data.to_csv('店铺回款.csv')
     daily_finance_data.to_csv('每日店铺回款.csv')
 

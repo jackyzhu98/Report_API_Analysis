@@ -11,7 +11,7 @@ import os
 #需修改Configs
 ###############
 path = "D:\合作店铺"
-company_name = "New"
+company_name = "New_2"
 # 1 - 松华 2 - 球德 3 - 沃鸿翔
 company_ID = 3
 
@@ -29,6 +29,7 @@ if not os.path.exists(output_path):
 ###########
 #数据库参数#
 ###########
+
 ## Connection
 db_host = '192.168.2.108'
 
@@ -55,3 +56,13 @@ seller_product = 'tb_product_info_us'
 
 ### Tables in Currency_DB
 currency_table = 'exchange_rate_daily'
+
+
+### Seller 筛选条件
+seller_list = 1 ## 1-使用单独seller list 2-从表里取sellerlist
+if seller_list == 1:
+    seller_filter = f""" _seller_id in ('AU8M1UZCRS8TI')"""
+else:
+    seller_filter = f"""_seller_id collate utf8mb4_unicode_520_ci in 
+                 (SELECT seller_code FROM {background_db}.vw_company_email_seller
+                where company_id = {company_ID})"""
