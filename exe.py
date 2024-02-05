@@ -31,7 +31,7 @@ if __name__ == '__main__':
     order_data = pd.read_csv('seller_order.csv')
     finance_data = pd.read_csv('finance.csv')
     order_product = pd.read_csv('order_product.csv')
-    #inventory = pd.read_csv('seller_inventory.csv')
+    inventory = pd.read_csv('seller_inventory.csv')
     currency_data = pd.read_csv('currency.csv')
     refund_data = pd.read_csv('charge_back.csv')
     
@@ -51,13 +51,13 @@ if __name__ == '__main__':
     print("店铺回款分析结束...")
 
     print("开始扣款分析...")
-    #fee_analysis(order_product,inventory,currency_data)
+    fee_analysis(order_product,inventory,currency_data)
     print("扣款分析结束...")
 
     print("开始退款分析...")
-    #refund_analysis(refund_data,order_data,inventory,currency_data)
+    refund_analysis(refund_data,order_data,inventory,currency_data)
     print("退款分析结束...")
 
     print("开始产品销售量分析...")
-    #product_sales(order_product,order_data,inventory,currency_data)
+    product_sales(order_product,order_data,inventory,currency_data)
     print("产品销售量分析结束...")

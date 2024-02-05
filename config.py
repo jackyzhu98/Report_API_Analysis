@@ -11,7 +11,7 @@ import os
 #需修改Configs
 ###############
 path = "D:\合作店铺"
-company_name = "New_2"
+company_name = "中世"
 # 1 - 松华 2 - 球德 3 - 沃鸿翔
 company_ID = 3
 
@@ -61,7 +61,7 @@ currency_table = 'exchange_rate_daily'
 ### Seller 筛选条件
 seller_list = 1 ## 1-使用单独seller list 2-从表里取sellerlist
 if seller_list == 1:
-    seller_filter = f""" _seller_id in ('AU8M1UZCRS8TI')"""
+    seller_filter = f""" _seller_id in ('A2UVSPW9T36W11','A3A2SKWMOC62VF','A2ST06RBRNM2YB','AYBG8KY93WXSD','A4UEEFW5C73SF')"""
 else:
     seller_filter = f"""_seller_id collate utf8mb4_unicode_520_ci in 
                  (SELECT seller_code FROM {background_db}.vw_company_email_seller
