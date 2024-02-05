@@ -1,6 +1,7 @@
 
 import json
 import os
+from config import *
 
 ## 店铺销售量数据
 def seller_order(order_data,cur_data):
@@ -17,8 +18,8 @@ def seller_finance(finance_data,cur_data):
     finance_data['amount_usd'] = finance_data['amount']/finance_data['rate']
     monthly_finance_data = finance_data.groupby(['seller_id','year','month','currency_code'])[['amount_usd']].sum().reset_index()
     daily_finance_data = finance_data.groupby(['seller_id','year','month','day','currency_code'])[['amount_usd']].sum().reset_index()
-    monthly_finance_data.to_csv('店铺回款.csv')
-    daily_finance_data.to_csv('每日店铺回款.csv')
+    monthly_finance_data.to_csv(company_name+'_店铺回款.csv')
+    daily_finance_data.to_csv(company_name+'_每日店铺回款.csv')
 
 ## 产品销售量数据
 def product_sales(order_product,order_data,inventory,cur_data):
@@ -28,7 +29,7 @@ def product_sales(order_product,order_data,inventory,cur_data):
     product_sales['asin'] = product_sales['asin'].fillna('Missing')
     product_sales['amount_usd'] = product_sales['amount']/product_sales['rate']
     product_sales = product_sales.groupby(['seller_id','marketplace','asin','seller_sku','year','month'])[['amount_usd','quantity_shipped']].sum().reset_index()
-    product_sales.to_csv('产品销量.csv')
+    product_sales.to_csv( company_name +'_产品销量.csv')
 
 
 ## 扣款数据
@@ -68,7 +69,7 @@ def fee_analysis(order_product,inventory,cur_data):
     result_df = order_product.groupby(['year_month','seller_id','marketplace','asin'])[type_list + tax_type+ ['quantity_shipped']].sum().reset_index()
     result_df['Total_Fee'] = result_df[type_list].sum(axis = 1)
     result_df['Total_Tax'] = result_df[tax_type].sum(axis = 1)
-    result_df.to_csv('扣款分析.csv')
+    result_df.to_csv(company_name+'_扣款分析.csv')
 
 ## 退款分析
 def refund_analysis(refund_data,order_data,inventory,cur_data):
@@ -119,4 +120,4 @@ def refund_analysis(refund_data,order_data,inventory,cur_data):
     result_df = result_df.merge(order_data[['year_month','seller_id','order_amount','marketplace']], how = 'left',on = ['year_month','seller_id','marketplace'])
     result_df.columns = ['year_month','seller_id','market','退货产品总价','退货产品数量','退单数量','订单总数']
     
-    result_df.to_csv('退款分析.csv',encoding = 'utf-8-sig')
+    result_df.to_csv(company_name+'_退款分析.csv',encoding = 'utf-8-sig')
