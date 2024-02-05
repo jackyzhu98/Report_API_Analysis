@@ -61,12 +61,7 @@ currency_table = 'exchange_rate_daily'
 ### Seller 筛选条件
 seller_list = 1 ## 1-使用单独seller list 2-从表里取sellerlist
 if seller_list == 1:
-    seller_filter = f""" _seller_id in ('A4UEEFW5C73SF',
-'A2UVSPW9T36W11',
-'A2ST06RBRNM2YB',
-'AYBG8KY93WXSD',
-'A3A2SKWMOC62VF',
-'AU8M1UZCRS8TI',
+    seller_filter = f""" _seller_id in (
 'A33LLDB3RRSIHG',
 'AM19TQ29Y43UA',
 'A32Z86WTB0DELB',
