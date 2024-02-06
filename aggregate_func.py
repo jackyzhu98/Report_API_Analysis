@@ -9,8 +9,8 @@ def seller_order(order_data,cur_data):
     order_data['amount_usd'] = order_data['amount']/order_data['rate']
     monthly_order_data = order_data.groupby(['seller_id','marketplace','year','month'])[['amount_usd','quantity_shipped']].sum().reset_index()
     daily_order_data = order_data.groupby(['seller_id','marketplace','year','month','day'])[['amount_usd','quantity_shipped']].sum().reset_index()
-    monthly_order_data.to_csv('店铺销量.csv')
-    daily_order_data.to_csv('每日店铺销量.csv')
+    monthly_order_data.to_csv(company_name+'_店铺销量.csv')
+    daily_order_data.to_csv(company_name+'_每日店铺销量.csv')
 
 ## 店铺回款数据
 def seller_finance(finance_data,cur_data):
@@ -121,3 +121,12 @@ def refund_analysis(refund_data,order_data,inventory,cur_data):
     result_df.columns = ['year_month','seller_id','market','退货产品总价','退货产品数量','退单数量','订单总数']
     
     result_df.to_csv(company_name+'_退款分析.csv',encoding = 'utf-8-sig')
+
+
+## 入库分析
+def inbound_analysis(inbound_data,inventory,order_product):
+    inbound = inbound_data.groupby(['seller_id','seller_sku','year','month'])['quantity_received'].sum().reset_index()
+    inbound = inbound.merge(inventory[['seller_id','seller_sku','asin']],how = 'left', on = ['seller_id','seller_sku'])
+    inbound = inbound.merge(order_product[['seller_id','seller_sku','year','month','quantity_shipped']],how = 'left', on = ['seller_id','seller_sku','year','month'])
+    inbound['inventory'] = inbound['quantity_received'].cumsum() - inbound['quantity_shipped'].cumsum()
+    inbound.to_csv(company_name+'_入库分析.csv',encoding = 'utf-8-sig')

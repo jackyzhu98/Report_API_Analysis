@@ -34,7 +34,7 @@ if __name__ == '__main__':
     inventory = pd.read_csv('seller_inventory.csv')
     currency_data = pd.read_csv('currency.csv')
     refund_data = pd.read_csv('charge_back.csv')
-    
+    inbound_data = pd.read_csv('inbound.csv')
     if not os.path.exists(agg_path):
         os.makedirs(agg_path)
     os.chdir(os.path.join(output_path,'Agg Data'))
@@ -61,3 +61,5 @@ if __name__ == '__main__':
     print("开始产品销售量分析...")
     product_sales(order_product,order_data,inventory,currency_data)
     print("产品销售量分析结束...")
+
+    inbound_analysis(inbound_data=inbound_data,inventory=inventory,order_product=order_product)
