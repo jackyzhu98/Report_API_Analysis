@@ -23,6 +23,7 @@ def seller_finance(finance_data,cur_data):
 
 ## 产品销售量数据
 def product_sales(order_product,order_data,inventory,cur_data):
+    order_product = order_product.drop_duplicates(subset = ['amazon_order_id','seller_sku'])
     product_sales = order_data.merge(order_product[['seller_id','amazon_order_id','seller_sku','year','month','day']], how = 'left',on =['seller_id','amazon_order_id','year','month','day'])
     product_sales = product_sales.merge(cur_data,how = 'left',on = ['currency_code','year','month','day'])
     product_sales = product_sales.merge(inventory,how = 'left', on = ['seller_id','seller_sku'])
@@ -34,6 +35,7 @@ def product_sales(order_product,order_data,inventory,cur_data):
 
 ## 扣款数据
 def fee_analysis(order_product,inventory,cur_data):
+    order_product = order_product.drop_duplicates(subset = ['amazon_order_id','seller_sku'])
     order_product = order_product.merge(inventory,how = 'left', on = ['seller_id','seller_sku'])
     order_product['asin'] = order_product['asin'].fillna('Missing')
     order_product = order_product.merge(cur_data, how = 'left', on = ['year','month','day','currency_code'])
@@ -73,6 +75,7 @@ def fee_analysis(order_product,inventory,cur_data):
 
 ## 退款分析
 def refund_analysis(refund_data,order_data,inventory,cur_data):
+    refund_data = refund_data.drop_duplicates(subset = ['amazon_order_id','seller_sku'])
     refund_data = refund_data.merge(inventory,how = 'left', on = ['seller_id','seller_sku'])
     refund_data.asin = refund_data.asin.fillna('Missing')
     refund_data = refund_data.drop_duplicates()

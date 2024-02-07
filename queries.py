@@ -52,7 +52,7 @@ order_product_query = f"""
             FROM {'.'.join([api_db,order_events])}) b
             on a.amazon_order_id = b.amazon_order_id
             
-            INNER JOIN
+            LEFT JOIN
 
             (SELECT _root_id,seller_s_k_u,quantity_shipped, item_charge_list, item_fee_list,item_tax_withheld_list
             FROM {'.'.join([api_db,order_details])}) c
@@ -133,7 +133,7 @@ def basic_data_query(connection,raw_query_list):
         col =  raw_col_dict[i]
         try:
             df = query_func(connection = connection, query= qur, col_name= col)
-            df = df.drop_duplicates()
+            #df = df.drop_duplicates()
             df.to_csv(i+'.csv')
         except:
             print("Query Failed: " + i)

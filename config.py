@@ -11,7 +11,7 @@ import os
 #需修改Configs
 ###############
 path = "D:\合作店铺"
-company_name = "中世"
+company_name = "科帕奇——Test"
 # 1 - 松华 2 - 球德 3 - 沃鸿翔
 company_ID = 3
 
@@ -64,7 +64,7 @@ currency_table = 'exchange_rate_daily'
 seller_list = 1 ## 1-使用单独seller list 2-从表里取sellerlist
 if seller_list == 1:
     seller_filter = f""" _seller_id in 
-    ('A2UVSPW9T36W11', 'A3A2SKWMOC62VF', 'A2ST06RBRNM2YB', 'AYBG8KY93WXSD', 'A4UEEFW5C73SF')"""
+    ('A33LLDB3RRSIHG', 'AM19TQ29Y43UA', 'A32Z86WTB0DELB', 'A1BEMJQXCADRU0', 'A2FY3GQW75NO2D', 'A2R7HPZ408C2AG', 'AB0LFBRPZ644J', 'A18WUWKDSC6O7I', 'A1EUC7568MSSBK', 'A2H4OTRAETK9S2', 'A14OQ2F4XLOPS1', 'A36JG63EHQR1B6', 'A3SP2OYOU83Y6T', 'A3419JCPA2HIT9', 'A1AZBV6445WMJJ', 'AEH8ZWD6QIYA', 'AI5L06MWO4YDE', 'A2XDLEMD14HUFW')"""
 else:
     seller_filter = f"""_seller_id collate utf8mb4_unicode_520_ci in 
                  (SELECT seller_code FROM {background_db}.vw_company_email_seller
