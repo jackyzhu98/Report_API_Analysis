@@ -17,14 +17,15 @@ if __name__ == '__main__':
     ## Query Basic Data
     basic_path = os.path.join(output_path,'Basic Data')
     agg_path = os.path.join(output_path,'Agg Data')
-
+    
     if not os.path.exists(basic_path):
         os.makedirs(basic_path)
-
-    os.chdir(basic_path)
-    print("Querying Basic Data...")
-    basic_data_query(connection,raw_query_list)
-    print("Query Completed")
+        os.chdir(basic_path)
+        print("Querying Basic Data...")
+        basic_data_query(connection,raw_query_list)
+        print("Query Completed")
+    else:
+        os.chdir(basic_path)
 
     ## Data Read
     

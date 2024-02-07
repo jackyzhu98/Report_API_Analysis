@@ -30,10 +30,10 @@ seller_order_cols =  ['seller_id', 'currency_code', 'amount','quantity_shipped',
 ###店铺-产品记录##
 ###############
 seller_inventory_query = f"""
-                    SELECT _seller_id,seller_sku,asin,total_quantity
+                    SELECT _seller_id,seller_sku,asin
                     FROM tb_fba_inventory_v1_inventorysummaries
                     WHERE {seller_filter}"""
-seller_inventory_cols = ['seller_id','seller_sku','asin','total_quantity']
+seller_inventory_cols = ['seller_id','seller_sku','asin']
 ###############
 ###订单-产品信息#
 ###############
@@ -92,13 +92,9 @@ finance_qurcols = ['_seller_id' , 'original_total__currency_code', 'original_tot
 finance_query = f"""
             SELECT {', '.join(finance_qurcols)}
             FROM {'.'.join([api_db,finance_table])}
-            WHERE {seller_filter}
+            WHERE {seller_filter} and {finance_filter}
                         """
 finance_cols = ['seller_id','currency_code','amount','date','year','month','day']
-
-raw_query_list = ['seller_order','seller_inventory','order_product','charge_back','finance','currency']
-raw_query_dict = {'seller_order':seller_order_query,'seller_inventory':seller_inventory_query,'order_product':order_product_query,'charge_back':charge_back_query,'finance':finance_query,'currency':cur_query}
-raw_col_dict = {'seller_order':seller_order_cols,'seller_inventory':seller_inventory_cols,'order_product':order_product_cols,'charge_back':charge_back_cols,'finance':finance_cols,'currency':cur_cols}
 
 ###############
 ###入库记录#####
@@ -137,6 +133,7 @@ def basic_data_query(connection,raw_query_list):
         col =  raw_col_dict[i]
         try:
             df = query_func(connection = connection, query= qur, col_name= col)
+            df = df.drop_duplicates()
             df.to_csv(i+'.csv')
         except:
             print("Query Failed: " + i)
