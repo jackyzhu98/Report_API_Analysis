@@ -7,8 +7,8 @@ from config import *
 def seller_order(order_data,cur_data):
     order_data = order_data.merge(cur_data,how = 'left',on = ['currency_code','year','month','day'])
     order_data['amount_usd'] = order_data['amount']/order_data['rate']
-    monthly_order_data = order_data.groupby(['seller_id','marketplace','year','month'])[['amount_usd','quantity_shipped']].sum().reset_index()
-    daily_order_data = order_data.groupby(['seller_id','marketplace','year','month','day'])[['amount_usd','quantity_shipped']].sum().reset_index()
+    monthly_order_data = order_data.groupby(['seller_id','marketplace','year','month']).agg({'amount_usd':'sum','quantity_shipped':'sum','amazon_order_id':'nunique'}).reset_index()
+    daily_order_data = order_data.groupby(['seller_id','marketplace','year','month','day']).agg({'amount_usd':'sum','quantity_shipped':'sum','amazon_order_id':'nunique'}).reset_index()
     monthly_order_data.to_csv(company_name+'_店铺销量.csv')
     daily_order_data.to_csv(company_name+'_每日店铺销量.csv')
 
@@ -21,30 +21,32 @@ def seller_finance(finance_data,cur_data):
     monthly_finance_data.to_csv(company_name+'_店铺回款.csv')
     daily_finance_data.to_csv(company_name+'_每日店铺回款.csv')
 
-## 产品销售量数据
-def product_sales(order_product,order_data,inventory,cur_data):
-    order_product = order_product.drop_duplicates(subset = ['amazon_order_id','seller_sku'])
-    product_sales = order_data.merge(order_product[['seller_id','amazon_order_id','seller_sku','year','month','day']], how = 'left',on =['seller_id','amazon_order_id','year','month','day'])
-    product_sales = product_sales.merge(cur_data,how = 'left',on = ['currency_code','year','month','day'])
-    product_sales = product_sales.merge(inventory,how = 'left', on = ['seller_id','seller_sku'])
-    product_sales['asin'] = product_sales['asin'].fillna('Missing')
-    product_sales['amount_usd'] = product_sales['amount']/product_sales['rate']
-    product_sales = product_sales.groupby(['seller_id','marketplace','asin','seller_sku','year','month'])[['amount_usd','quantity_shipped']].sum().reset_index()
-    product_sales.to_csv( company_name +'_产品销量.csv')
-
 
 ## 扣款数据
 def fee_analysis(order_product,inventory,cur_data):
-    order_product = order_product.drop_duplicates(subset = ['amazon_order_id','seller_sku'])
     order_product = order_product.merge(inventory,how = 'left', on = ['seller_id','seller_sku'])
     order_product['asin'] = order_product['asin'].fillna('Missing')
     order_product = order_product.merge(cur_data, how = 'left', on = ['year','month','day','currency_code'])
-    type_list = []
+    
+    charge_type = []
+    for ind,row in order_product.iterrows():
+        try:
+            charge_list = json.loads(row['charge_list']) ## 扣除费用
+            for i in charge_list:
+                charge_type.append(i['ChargeType'])
+                if i['ChargeAmount_CurrencyCode'] != 'USD':
+                    order_product.loc[ind,i['ChargeType']] = i['ChargeAmount_CurrencyAmount']/row['rate']
+                else:
+                    order_product.loc[ind,i['ChargeType']] = i['ChargeAmount_CurrencyAmount']
+        except:
+            continue
+
+    fee_type = []
     for ind,row in order_product.iterrows():
         try:
             fee_list = json.loads(row['fee_list']) ## 扣除费用
             for i in fee_list:
-                type_list.append(i['FeeType'])
+                fee_type.append(i['FeeType'])
                 if i['FeeAmount_CurrencyCode'] != 'USD':
                     order_product.loc[ind,i['FeeType']] = i['FeeAmount_CurrencyAmount']/row['rate']
                 else:
@@ -66,16 +68,17 @@ def fee_analysis(order_product,inventory,cur_data):
         except:
             continue
     tax_type = list(set(tax_type))
-    type_list = list(set(type_list))
+    fee_type = list(set(fee_type))
     order_product['year_month'] = order_product['year'].astype(int).astype(str) +'_' + order_product['month'].astype(int).astype(str)   
-    result_df = order_product.groupby(['year_month','seller_id','marketplace','asin'])[type_list + tax_type+ ['quantity_shipped']].sum().reset_index()
-    result_df['Total_Fee'] = result_df[type_list].sum(axis = 1)
+    result_df = order_product.groupby(['year_month','seller_id','marketplace','asin'])[charge_type + fee_type + tax_type+ ['quantity_shipped']].sum().reset_index()
+    result_df['Total_Charge'] = result_df[charge_type].sum(axis = 1)
+    result_df['Total_Fee'] = result_df[fee_type].sum(axis = 1)
     result_df['Total_Tax'] = result_df[tax_type].sum(axis = 1)
-    result_df.to_csv(company_name+'_扣款分析.csv')
+    result_df['Net Amount'] = result_df['Total_Charge'] +  result_df['Total_Fee'] + result_df['Total_Tax']
+    result_df.to_csv(company_name+'_产品分析.csv')
 
 ## 退款分析
 def refund_analysis(refund_data,order_data,inventory,cur_data):
-    refund_data = refund_data.drop_duplicates(subset = ['amazon_order_id','seller_sku'])
     refund_data = refund_data.merge(inventory,how = 'left', on = ['seller_id','seller_sku'])
     refund_data.asin = refund_data.asin.fillna('Missing')
     refund_data = refund_data.drop_duplicates()

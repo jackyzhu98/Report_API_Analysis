@@ -60,7 +60,7 @@ if __name__ == '__main__':
     print("退款分析结束...")
 
     print("开始产品销售量分析...")
-    product_sales(order_product,order_data,inventory,currency_data)
+    #product_sales(order_product,order_data,inventory,currency_data)
     print("产品销售量分析结束...")
 
     inbound_analysis(inbound_data=inbound_data,inventory=inventory,order_product=order_product)

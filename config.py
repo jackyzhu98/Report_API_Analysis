@@ -11,7 +11,7 @@ import os
 #需修改Configs
 ###############
 path = "D:\合作店铺"
-company_name = "科帕奇——Test"
+company_name = "科帕奇"
 # 1 - 松华 2 - 球德 3 - 沃鸿翔
 company_ID = 3
 
