@@ -71,11 +71,11 @@ def fee_analysis(order_product,inventory,cur_data):
             continue
 
     order_product['year_month'] = order_product['year'].astype(int).astype(str) +'_' + order_product['month'].astype(int).astype(str)   
-    result_df = order_product.groupby(['year_month','seller_id','marketplace','asin'])[['Principal'] + fee_type + tax_type+ ['quantity_shipped']].sum().reset_index()
+    result_df = order_product.groupby(['year','month','seller_id','marketplace','asin'])[['Principal'] + fee_type + tax_type+ ['quantity_shipped']].sum().reset_index()
     result_df['Total_Sales'] = result_df['Principal']
     result_df['Total_Fee'] = result_df[fee_type].sum(axis = 1)
     result_df['Total_Tax'] = result_df[tax_type].sum(axis = 1)
-    result_df  = result_df[['year_month','seller_id','marketplace','asin','quantity_shipped','Total_Sales','Total_Fee','Total_Tax']]
+    #result_df  = result_df[['year_month','seller_id','marketplace','asin','quantity_shipped','Total_Sales','Total_Fee','Total_Tax']]
     result_df.to_csv(company_name+'_产品分析.csv')
 
 ## 退款分析
@@ -139,4 +139,3 @@ def inbound_analysis(inbound_data,inventory,order_product):
     inbound['quantity_shipped'] = inbound['quantity_shipped'] .fillna(0)
     inbound['inventory'] = inbound.groupby(['seller_sku'])['quantity_received'].cumsum() - inbound.groupby(['seller_sku'])['quantity_shipped'].cumsum()
     inbound.to_csv(company_name+'_入库分析.csv',encoding = 'utf-8-sig')
-    
