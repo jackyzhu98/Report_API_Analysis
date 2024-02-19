@@ -134,8 +134,11 @@ def refund_analysis(refund_data,order_data,inventory,cur_data):
 def inbound_analysis(inbound_data,inventory,order_product):
     order_product = order_product.groupby(['seller_id','seller_sku','year','month'])['quantity_shipped'].sum().reset_index().drop_duplicates()
     inbound = inbound_data.groupby(['seller_id','seller_sku','year','month'])['quantity_received'].sum().reset_index()
-    inbound = inbound.merge(inventory[['seller_id','seller_sku','asin']],how = 'left', on = ['seller_id','seller_sku'])
-    inbound = inbound.merge(order_product[['seller_id','seller_sku','year','month','quantity_shipped']],how = 'left', on = ['seller_id','seller_sku','year','month'])
+    inbound = order_product[['seller_id','seller_sku','year','month','quantity_shipped']].merge(inbound,how = 'outer', on = ['seller_id','seller_sku','year','month'])
+    inbound['quantity_received'] = inbound['quantity_received'] .fillna(0)
     inbound['quantity_shipped'] = inbound['quantity_shipped'] .fillna(0)
+    inbound = inbound.sort_values(['seller_id','seller_sku','year','month'],ascending = True)
     inbound['inventory'] = inbound.groupby(['seller_sku'])['quantity_received'].cumsum() - inbound.groupby(['seller_sku'])['quantity_shipped'].cumsum()
+    inbound = inbound.merge(inventory[['seller_id','seller_sku','asin']],how = 'left', on = ['seller_id','seller_sku'])
+    inbound['inventory_filled'] = inbound['inventory'].apply(lambda x:0 if x<0 else x)
     inbound.to_csv(company_name+'_入库分析.csv',encoding = 'utf-8-sig')

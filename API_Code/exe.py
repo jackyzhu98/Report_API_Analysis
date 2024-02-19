@@ -41,22 +41,22 @@ if __name__ == '__main__':
     os.chdir(os.path.join(output_path,'Agg Data'))
     
     try:
-        seller_order(order_data,currency_data)
+        #seller_order(order_data,currency_data)
         print("开始店铺销售量分析...")
         print("店铺销售量分析结束...")
     except:
         print("店铺销售量分析失败...")
 
     print("开始店铺回款分析...")
-    seller_finance(finance_data,currency_data)
+    #seller_finance(finance_data,currency_data)
     print("店铺回款分析结束...")
 
     print("开始产品分析...")
-    fee_analysis(order_product,inventory,currency_data)
+    #fee_analysis(order_product,inventory,currency_data)
     print("产品分析结束...")
 
     print("开始退款分析...")
-    refund_analysis(refund_data,order_data,inventory,currency_data)
+    #refund_analysis(refund_data,order_data,inventory,currency_data)
     print("退款分析结束...")
 
 
