@@ -46,7 +46,7 @@ order_product_query = f"""
             FROM {'.'.join([api_db,order_table])}
             WHERE {seller_filter} and {order_filter}) a 
             
-            INNER JOIN
+            LEFT JOIN
             
             (SELECT id, amazon_order_id
             FROM {'.'.join([api_db,order_events])}) b

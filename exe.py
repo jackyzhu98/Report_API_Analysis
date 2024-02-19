@@ -51,16 +51,13 @@ if __name__ == '__main__':
     seller_finance(finance_data,currency_data)
     print("店铺回款分析结束...")
 
-    print("开始扣款分析...")
+    print("开始产品分析...")
     fee_analysis(order_product,inventory,currency_data)
-    print("扣款分析结束...")
+    print("产品分析结束...")
 
     print("开始退款分析...")
     refund_analysis(refund_data,order_data,inventory,currency_data)
     print("退款分析结束...")
 
-    print("开始产品销售量分析...")
-    #product_sales(order_product,order_data,inventory,currency_data)
-    print("产品销售量分析结束...")
 
     inbound_analysis(inbound_data=inbound_data,inventory=inventory,order_product=order_product)

@@ -28,16 +28,13 @@ def fee_analysis(order_product,inventory,cur_data):
     order_product['asin'] = order_product['asin'].fillna('Missing')
     order_product = order_product.merge(cur_data, how = 'left', on = ['year','month','day','currency_code'])
     
-    charge_type = []
     for ind,row in order_product.iterrows():
         try:
             charge_list = json.loads(row['charge_list']) ## 扣除费用
-            for i in charge_list:
-                charge_type.append(i['ChargeType'])
-                if i['ChargeAmount_CurrencyCode'] != 'USD':
-                    order_product.loc[ind,i['ChargeType']] = i['ChargeAmount_CurrencyAmount']/row['rate']
-                else:
-                    order_product.loc[ind,i['ChargeType']] = i['ChargeAmount_CurrencyAmount']
+            product_sales = charge_list[0]
+            assert product_sales['ChargeType'] == 'Principal'
+            
+            order_product.loc[ind,'Principal'] = product_sales['ChargeAmount_CurrencyAmount']/row['rate']
         except:
             continue
 
@@ -47,12 +44,15 @@ def fee_analysis(order_product,inventory,cur_data):
             fee_list = json.loads(row['fee_list']) ## 扣除费用
             for i in fee_list:
                 fee_type.append(i['FeeType'])
+                fee_type = list(set(fee_type))
                 if i['FeeAmount_CurrencyCode'] != 'USD':
                     order_product.loc[ind,i['FeeType']] = i['FeeAmount_CurrencyAmount']/row['rate']
                 else:
                     order_product.loc[ind,i['FeeType']] = i['FeeAmount_CurrencyAmount']
         except:
             continue
+
+
     tax_type = []
     for ind,row in order_product.iterrows():
         try:
@@ -61,20 +61,21 @@ def fee_analysis(order_product,inventory,cur_data):
             tax_info = tax_list['TaxesWithheld']
             for i in tax_info:
                 tax_type.append(i['ChargeType'])
+                tax_type = list(set(tax_type))
+
                 if i['ChargeAmount_CurrencyCode'] != 'USD':
                     order_product.loc[ind,i['ChargeType']] = i['ChargeAmount_CurrencyAmount'] / row['rate']
                 else:
                     order_product.loc[ind,i['ChargeType']] = i['ChargeAmount_CurrencyAmount']
         except:
             continue
-    tax_type = list(set(tax_type))
-    fee_type = list(set(fee_type))
+
     order_product['year_month'] = order_product['year'].astype(int).astype(str) +'_' + order_product['month'].astype(int).astype(str)   
-    result_df = order_product.groupby(['year_month','seller_id','marketplace','asin'])[charge_type + fee_type + tax_type+ ['quantity_shipped']].sum().reset_index()
-    result_df['Total_Charge'] = result_df[charge_type].sum(axis = 1)
+    result_df = order_product.groupby(['year_month','seller_id','marketplace','asin'])[['Principal'] + fee_type + tax_type+ ['quantity_shipped']].sum().reset_index()
+    result_df['Total_Sales'] = result_df['Principal']
     result_df['Total_Fee'] = result_df[fee_type].sum(axis = 1)
     result_df['Total_Tax'] = result_df[tax_type].sum(axis = 1)
-    result_df['Net Amount'] = result_df['Total_Charge'] +  result_df['Total_Fee'] + result_df['Total_Tax']
+    result_df  = result_df[['year_month','seller_id','marketplace','asin','quantity_shipped','Total_Sales','Total_Fee','Total_Tax']]
     result_df.to_csv(company_name+'_产品分析.csv')
 
 ## 退款分析
@@ -125,7 +126,7 @@ def refund_analysis(refund_data,order_data,inventory,cur_data):
     result_df = result_df.groupby(['year_month','seller_id','marketplace']).agg({'Principal':'sum','quantity_shipped':'sum','amazon_order_id':'nunique'}).reset_index()
     result_df = result_df.merge(order_data[['year_month','seller_id','order_amount','marketplace']], how = 'left',on = ['year_month','seller_id','marketplace'])
     result_df.columns = ['year_month','seller_id','market','退货产品总价','退货产品数量','退单数量','订单总数']
-    
+
     result_df.to_csv(company_name+'_退款分析.csv',encoding = 'utf-8-sig')
 
 
@@ -138,3 +139,4 @@ def inbound_analysis(inbound_data,inventory,order_product):
     inbound['quantity_shipped'] = inbound['quantity_shipped'] .fillna(0)
     inbound['inventory'] = inbound.groupby(['seller_sku'])['quantity_received'].cumsum() - inbound.groupby(['seller_sku'])['quantity_shipped'].cumsum()
     inbound.to_csv(company_name+'_入库分析.csv',encoding = 'utf-8-sig')
+    
