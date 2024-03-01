@@ -36,6 +36,7 @@ if __name__ == '__main__':
     currency_data = pd.read_csv('currency.csv')
     refund_data = pd.read_csv('charge_back.csv')
     inbound_data = pd.read_csv('inbound.csv')
+    
     if not os.path.exists(agg_path):
         os.makedirs(agg_path)
     os.chdir(os.path.join(output_path,'Agg Data'))
