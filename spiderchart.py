@@ -4,7 +4,7 @@ import matplotlib.font_manager as fm
 
 font = fm.FontProperties(fname = 'c:\\windows\\fonts\\simsun.ttc')
 
-categories = ['銷售量', '銷售收入','產品價格','産品評分', '評論量', '排名']
+categories = ['銷售量', '銷售收入','産品評分', '評論量', '排名','違約概率','不良貸款率']
 
 # corresponding ids: rating, revenue, sales, ranking, review, npl, pd, score
 print(categories)
@@ -16,11 +16,11 @@ print(categories)
 # shop1 = [*shop1, shop1[0]]
 sid = "ARNP8FTZEG83T"
 
-whole = [1,0.8333,0.3333,0,0.5,0.3333]
+whole = [20.73,82.31,1.83,22.11,28.45,85.34,100]
 
 k = 60
 
-whole = [k*(x) + 40 for x in whole]
+whole = [k*(x/100) + 40 for x in whole]
 
 whole = [*whole, whole[0]]
 print(whole)
@@ -34,7 +34,7 @@ label_loc = np.linspace(start = 0, stop = 2 * np.pi, num = len(categories))
 label_loc += label_loc[:1]
 
 
-fig, ax = plt.subplots(figsize = (5,5), subplot_kw = dict(polar = True), dpi = 300)
+fig, ax = plt.subplots(figsize = (8,8), subplot_kw = dict(polar = True), dpi = 300)
 
 ax.plot(label_loc, ref1, color = 'gray', linewidth = 1)
 ax.fill(label_loc, ref1, color = 'gray', alpha = 0.05)
@@ -64,4 +64,4 @@ ax.tick_params(axis = 'y', labelsize = 8)
 ax.set_facecolor('#FAFAFA')
 
 
-plt.savefig("D:\合作店铺\WHX\spider\/" + sid + '.jpg', dpi = 200)
+plt.savefig("D:\合作店铺\sellers\QD",dpi = 300)
