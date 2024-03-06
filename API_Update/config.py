@@ -15,8 +15,7 @@ company_name = "科帕奇"
 # 1 - 松华 2 - 球德 3 - 沃鸿翔
 company_ID = 3
 
-db_user= 'jacky'
-password= 'jacky_1017'
+
 ##########
 #输出路径##
 ##########
@@ -32,7 +31,8 @@ if not os.path.exists(output_path):
 
 ## Connection
 db_host = '192.168.2.108'
-
+db_user= 'jacky'
+password= 'jacky_1017'
  
 ## Database
 api_db = 'amazon_swagger'
@@ -52,7 +52,7 @@ inv_table = 'tb_fba_inventory_v1_inventorysummaries'
 inbound_table = 'tb_fba_inbound_v0_shipmentitems_itemdata'
 
 
-### Tables in BG_DB
+### Tables in Zonglink_DB
 seller_table = 'vw_company_email_seller'
 seller_product = 'tb_product_info_us'
 

@@ -15,17 +15,18 @@ connection = mysql.connector.connect(
 
 if __name__ == '__main__':
     ## Query Basic Data
-    basic_path = os.path.join(output_path,'Basic Data')
+    raw_path = os.path.join(output_path,'Raw Data')
     agg_path = os.path.join(output_path,'Agg Data')
+    table_path = os.path.join(output_path,'Table Data')
     
-    if not os.path.exists(basic_path):
-        os.makedirs(basic_path)
-        os.chdir(basic_path)
+    if not os.path.exists(raw_path):
+        os.makedirs(raw_path)
+        os.chdir(raw_path)
         print("Querying Basic Data...")
         basic_data_query(connection,raw_query_list)
         print("Query Completed")
     else:
-        os.chdir(basic_path)
+        os.chdir(raw_path)
 
     ## Data Read
     
@@ -41,12 +42,9 @@ if __name__ == '__main__':
         os.makedirs(agg_path)
     os.chdir(os.path.join(output_path,'Agg Data'))
     
-    try:
-        seller_order(order_data,currency_data)
-        print("开始店铺销售量分析...")
-        print("店铺销售量分析结束...")
-    except:
-        print("店铺销售量分析失败...")
+    print("开始店铺销售量分析...")
+    seller_order(order_data,currency_data)
+    print("店铺销售量分析结束...")
 
     print("开始店铺回款分析...")
     seller_finance(finance_data,currency_data)

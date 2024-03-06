@@ -115,17 +115,17 @@ def refund_analysis(refund_data,order_data,inventory,cur_data):
     charge_type = list(set(charge_type))
     fee_type = list(set(fee_type))
 
-    order_data['year_month'] = order_data['year'].astype(int).astype(str) + '_' + order_data['month'].astype(int).astype(str)
-    refund_data['year_month'] = refund_data['year'].astype(int).astype(str) +'_' +refund_data['month'].astype(int).astype(str)
-    result_df = refund_data.groupby(['year_month','seller_id','marketplace','amazon_order_id','asin'])[charge_type+fee_type+['quantity_shipped']].sum().reset_index()
+    order_data['date'] = order_data['year'].astype(int).astype(str) + '-' + order_data['month'].astype(int).astype(str)
+    refund_data['date'] = refund_data['year'].astype(int).astype(str) +'-' +refund_data['month'].astype(int).astype(str)
+    result_df = refund_data.groupby(['date','seller_id','marketplace','amazon_order_id','asin'])[charge_type+fee_type+['quantity_shipped']].sum().reset_index()
     result_df['Total_Charge'] = result_df[charge_type].sum(axis = 1)
     result_df['Total_Fee'] = result_df[fee_type].sum(axis = 1)
     result_df['Total'] = result_df[charge_type+fee_type].sum(axis = 1)
-    order_data = order_data.groupby(['seller_id','year_month','marketplace'])['amazon_order_id'].nunique().reset_index()
-    order_data.columns = ['seller_id','year_month','marketplace','order_amount']
-    result_df = result_df.groupby(['year_month','seller_id','marketplace']).agg({'Principal':'sum','quantity_shipped':'sum','amazon_order_id':'nunique'}).reset_index()
-    result_df = result_df.merge(order_data[['year_month','seller_id','order_amount','marketplace']], how = 'left',on = ['year_month','seller_id','marketplace'])
-    result_df.columns = ['year_month','seller_id','market','退货产品总价','退货产品数量','退单数量','订单总数']
+    order_data = order_data.groupby(['seller_id','date','marketplace'])['amazon_order_id'].nunique().reset_index()
+    order_data.columns = ['seller_id','date','marketplace','order_amount']
+    result_df = result_df.groupby(['date','seller_id','marketplace']).agg({'Principal':'sum','quantity_shipped':'sum','amazon_order_id':'nunique'}).reset_index()
+    result_df = result_df.merge(order_data[['date','seller_id','order_amount','marketplace']], how = 'left',on = ['year_month','seller_id','marketplace'])
+    result_df.columns = ['date','seller_id','market','退货产品总价','退货产品数量','退单数量','订单总数']
 
     result_df.to_csv(company_name+'_退款分析.csv',encoding = 'utf-8-sig')
 
