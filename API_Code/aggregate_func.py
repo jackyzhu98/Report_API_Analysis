@@ -22,8 +22,8 @@ def seller_finance(finance_data,cur_data):
     daily_finance_data.to_csv(company_name+'_每日店铺回款.csv')
 
 
-## 扣款数据
-def fee_analysis(order_product,inventory,cur_data):
+## 产品数据
+def product_analysis(order_product,inventory,cur_data):
     order_product = order_product.merge(inventory,how = 'left', on = ['seller_id','seller_sku'])
     order_product['asin'] = order_product['asin'].fillna('Missing')
     order_product = order_product.merge(cur_data, how = 'left', on = ['year','month','day','currency_code'])
@@ -76,7 +76,7 @@ def fee_analysis(order_product,inventory,cur_data):
     result_df['Total_Fee'] = result_df[fee_type].sum(axis = 1)
     result_df['Total_Tax'] = result_df[tax_type].sum(axis = 1)
     #result_df  = result_df[['year_month','seller_id','marketplace','asin','quantity_shipped','Total_Sales','Total_Fee','Total_Tax']]
-    result_df.to_csv(company_name+'_产品分析.csv')
+    result_df.to_csv('product_data.csv')
 
 ## 退款分析
 def refund_analysis(refund_data,order_data,inventory,cur_data):
@@ -127,7 +127,7 @@ def refund_analysis(refund_data,order_data,inventory,cur_data):
     result_df = result_df.merge(order_data[['date','seller_id','order_amount','marketplace']], how = 'left',on = ['year_month','seller_id','marketplace'])
     result_df.columns = ['date','seller_id','market','退货产品总价','退货产品数量','退单数量','订单总数']
 
-    result_df.to_csv(company_name+'_退款分析.csv',encoding = 'utf-8-sig')
+    result_df.to_csv('refund.csv',encoding = 'utf-8-sig')
 
 
 ## 入库分析

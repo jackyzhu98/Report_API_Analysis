@@ -61,7 +61,7 @@ order_product_query = f"""
                 YEAR(a.purchase_date) AS year,
                 MONTH(a.purchase_date) AS month,
                 DAY(a.purchase_date) AS day,
-                c.seller_sku,
+                c.seller_s_k_u,
                 c.quantity_shipped,
                 c.item_charge_list,
                 c.item_fee_list,
@@ -84,7 +84,7 @@ order_product_query = f"""
             LEFT JOIN
                 (SELECT 
                     _root_id,
-                    seller_sku,
+                    seller_s_k_u,
                     quantity_shipped,
                     item_charge_list,
                     item_fee_list,
@@ -93,7 +93,7 @@ order_product_query = f"""
                     {api_db}.{order_details}) c
             ON 
                 b.id = c._root_id;
-                        """
+            """
 
 ###############
 ###退单记录#####
@@ -210,7 +210,7 @@ cancel_query = f"""
             GROUP BY YEAR(purchase_date) , MONTH(purchase_date) , sales_channel;"""
 cancel_cols = ['year','month','market','total_orders','shipped_orders','shipped_rate','canceled_orders','canceled_rate']
 
-raw_query_list = ['seller_order','seller_inventory','order_product','charge_back','finance','currency','inbound','cancel_query']
+raw_query_list = ['seller_order','seller_inventory','order_product','charge_back','finance','currency','inbound','cancel']
 raw_query_dict = {'seller_order':seller_order_query,'seller_inventory':seller_inventory_query,'order_product':order_product_query,'charge_back':charge_back_query,'finance':finance_query,'currency':cur_query,'inbound':inbound_query,'cancel':cancel_query}
 raw_col_dict = {'seller_order':seller_order_cols,'seller_inventory':seller_inventory_cols,'order_product':order_product_cols,'charge_back':charge_back_cols,'finance':finance_cols,'currency':cur_cols,'inbound':inbound_cols,'cancel':cancel_cols}
 

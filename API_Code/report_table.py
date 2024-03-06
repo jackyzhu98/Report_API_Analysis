@@ -20,5 +20,4 @@ def Table_5(order_df,receive_df):
     res = df_2023.groupby(['date'])['销售额','回款'].sum().round().astype(int).reset_index()
     
     ## Top 10 店铺
-    
-    df
+
