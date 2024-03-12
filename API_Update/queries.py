@@ -3,7 +3,6 @@ import pandas as pd
 
 
 
-finance_filter = f"""fund_transfer_status = 'Succeeded'""" #成功收到回款
 ###############
 #####货币汇率###
 ###############
@@ -155,8 +154,8 @@ charge_back_query = f"""
 ###############
 ###回款记录#####
 ###############
-finance_qurcols = ['_seller_id' , 'original_total__currency_code', 'original_total__currency_amount','fund_transfer_date date' ,'Year(fund_transfer_date)','Month(fund_transfer_date)','Day(fund_transfer_date)']
-finance_filter = f"""fund_transfer_status = 'Succeeded'""" #成功收到回款
+finance_qurcols = ['_seller_id' , 'original_total__currency_code', 'original_total__currency_amount','fund_transfer_date date' ,'Year(fund_transfer_date)','Month(fund_transfer_date)','Day(fund_transfer_date)','fund_transfer_status']
+finance_filter = f"""fund_transfer_status in ('Succeeded','Processing') """ #成功收到回款
 
 finance_query = f"""
             SELECT 
@@ -166,7 +165,7 @@ finance_query = f"""
             WHERE 
                 {seller_filter} and {finance_filter}
             """
-finance_cols = ['seller_id','currency_code','amount','date','year','month','day']
+finance_cols = ['seller_id','currency_code','amount','date','year','month','day','status']
 
 ###############
 ###入库记录#####

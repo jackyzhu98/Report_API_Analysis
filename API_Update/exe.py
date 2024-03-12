@@ -22,11 +22,13 @@ if __name__ == '__main__':
     
     if not os.path.exists(raw_path):
         os.makedirs(raw_path)
+        os.chdir(raw_path)
     else:
         os.chdir(raw_path)
     print("Querying Basic Data...")
     basic_data_query(connection,raw_query_list)
     print("Query Completed")
+
     ## 读取Raw Data
     order_data = pd.read_csv('seller_order.csv')
     finance_data = pd.read_csv('finance.csv')
@@ -35,7 +37,7 @@ if __name__ == '__main__':
     currency_data = pd.read_csv('currency.csv')
     refund_data = pd.read_csv('charge_back.csv')
     inbound_data = pd.read_csv('inbound.csv')
-
+    
     if not os.path.exists(agg_path):
         os.makedirs(agg_path)
         os.chdir(agg_path)

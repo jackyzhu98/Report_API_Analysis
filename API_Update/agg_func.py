@@ -7,6 +7,7 @@ def order_finance(order_data,finance_data,cur_data):
     ## 汇率转化
     order_data = order_data.merge(cur_data,how = 'left',on = ['currency_code','year','month','day'])
     order_data['amount_usd'] = order_data['amount']/order_data['rate']
+    
     ## 月度数据
     monthly_order_data = order_data.groupby(['seller_id','marketplace','currency_code','year','month']).agg({'amount_usd':'sum','quantity_shipped':'sum','amazon_order_id':'nunique'}).reset_index() 
     monthly_order_data.to_csv(company_name+'_月度店铺销量.csv')

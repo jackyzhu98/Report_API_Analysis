@@ -4,7 +4,7 @@ import matplotlib.font_manager as fm
 
 font = fm.FontProperties(fname = 'c:\\windows\\fonts\\simsun.ttc')
 
-categories = ['銷售量', '銷售收入','産品評分', '評論量', '排名','違約概率','不良貸款率']
+categories = ['銷售量', '銷售收入','産品評分', '評論量', '排名','違約概率','違約損失率']
 
 # corresponding ids: rating, revenue, sales, ranking, review, npl, pd, score
 print(categories)
@@ -16,13 +16,14 @@ print(categories)
 # shop1 = [*shop1, shop1[0]]
 sid = "ARNP8FTZEG83T"
 
-whole = [20.73,82.31,1.83,22.11,28.45,85.34,100]
+whole = [53.9,86.3,16.7,37,10,85.34,100]
 
 k = 60
 
 whole = [k*(x/100) + 40 for x in whole]
 
 whole = [*whole, whole[0]]
+
 print(whole)
 # shop2_group = [0.324404762, 0.095238095, 0.168154762, 0.263392857, 0.120535714, 0.4539, 0.2738, 0.0056]
 # shop2_group = [100 - (100 * x) for x in shop2_group]
@@ -64,4 +65,4 @@ ax.tick_params(axis = 'y', labelsize = 8)
 ax.set_facecolor('#FAFAFA')
 
 
-plt.savefig("D:\合作店铺\sellers\QD",dpi = 300)
+plt.savefig("D:\合作店铺\科帕奇_1",dpi = 300)
